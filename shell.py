@@ -1,5 +1,11 @@
 #https://youtu.be/Eythq9848Fg
+import chico
 
 while True:
     text = input('Chico > ')
-    print(text)
+    result, error = chico.run(text)
+
+    if error: print(error.asString())
+    else: print(result)
+
+
