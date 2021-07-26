@@ -1,12 +1,12 @@
 # This is a very useful piece of software
 
-FUN oopify(prefix) -> prefix + "oop"
+func oopify(prefix) -> prefix + "oop"
 
-FUN join(elements, separator)
+func join(elements, separator)
 	let result = ""
 	let len = len(elements)
 
-	for i = 0 TO len then
+	for i = 0 to len then
 		let result = result + elements/i
 		if i != len - 1 then let result = result + separator
 	end
@@ -14,11 +14,11 @@ FUN join(elements, separator)
 	return result
 end
 
-FUN map(elements, func)
+func map(elements, myFunc)
 	let new_elements = []
 
-	for i = 0 TO len(elements) then
-		append(new_elements, func(elements/i))
+	for i = 0 to len(elements) then
+		append(new_elements, myFunc(elements/i))
 	end
 
 	return new_elements
@@ -26,7 +26,7 @@ end
 
 print("Greetings universe!")
 
-for i = 0 TO 5 then
+for i = 0 to 5 then
 	print(join(map(["l", "sp"], oopify), ", "))
 
 end
