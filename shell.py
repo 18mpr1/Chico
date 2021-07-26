@@ -1,6 +1,7 @@
 #https://youtu.be/Eythq9848Fg
 import chico
 
+
 """
 file = open("notice.txt")
 lines = file.readlines()
@@ -10,6 +11,7 @@ for line in lines:
 print('\n')
 """
 
+# run("main.ch")
 
 while True:
     text = input('Chico > ')
