@@ -24,6 +24,7 @@ func map(elements, myFunc)
 	return new_elements
 end
 
+print("Matthew")
 print("Greetings universe!")
 
 for i = 0 to 5 then
