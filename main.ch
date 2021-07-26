@@ -6,27 +6,27 @@ FUN join(elements, separator)
 	let result = ""
 	let len = len(elements)
 
-	FOR i = 0 TO len THEN
+	for i = 0 TO len then
 		let result = result + elements/i
-		IF i != len - 1 THEN let result = result + separator
-	END
+		if i != len - 1 then let result = result + separator
+	end
 
-	RETURN result
-END
+	return result
+end
 
 FUN map(elements, func)
 	let new_elements = []
 
-	FOR i = 0 TO len(elements) THEN
-		APPEND(new_elements, func(elements/i))
-	END
+	for i = 0 TO len(elements) then
+		append(new_elements, func(elements/i))
+	end
 
-	RETURN new_elements
-END
+	return new_elements
+end
 
 print("Greetings universe!")
 
-FOR i = 0 TO 5 THEN
+for i = 0 TO 5 then
 	print(join(map(["l", "sp"], oopify), ", "))
 
-END
+end
