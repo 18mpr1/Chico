@@ -3,19 +3,19 @@
 FUN oopify(prefix) -> prefix + "oop"
 
 FUN join(elements, separator)
-	VAR result = ""
-	VAR len = len(elements)
+	let result = ""
+	let len = len(elements)
 
 	FOR i = 0 TO len THEN
-		VAR result = result + elements/i
-		IF i != len - 1 THEN VAR result = result + separator
+		let result = result + elements/i
+		IF i != len - 1 THEN let result = result + separator
 	END
 
 	RETURN result
 END
 
 FUN map(elements, func)
-	VAR new_elements = []
+	let new_elements = []
 
 	FOR i = 0 TO len(elements) THEN
 		APPEND(new_elements, func(elements/i))
