@@ -1,4 +1,4 @@
-# This is a very useful piece of software
+~ This is a very useful piece of software
 
 func oopify(prefix) -> prefix + "oop"
 
@@ -10,7 +10,7 @@ func join(elements, separator)
 		let result = result + elements/i
 		if i != len - 1 then let result = result + separator
 	end
-
+~ this is a comment
 	return result
 end
 

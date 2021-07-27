@@ -53,7 +53,14 @@ while-expr  : KEYWORD:WHILE expr KEYWORD:THEN
               statement
             | (NEWLINE statements KEYWORD:END)
 
-func-def    : KEYWORD:FUN IDENTIFIER?
+func-def    : KEYWORD:FUNC IDENTIFIER?
               LPAREN (IDENTIFIER (COMMA IDENTIFIER)*)? RPAREN
               (ARROW expr)
             | (NEWLINE statements KEYWORD:END)
+
+
+# trying to add this
+func-def    : KEYWORD:FUNC INDETIFIER?
+              LPAREN (IDENTIFIER (COMMA IDENTIFIER)*)? RPAREN
+              ( LBRACE )
+            | (NEWLINE statements KEYWORD:RBRACE)

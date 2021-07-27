@@ -129,7 +129,7 @@ TT_COMMA = 'COMMA'
 TT_ARROW = 'ARROW'
 TT_NEWLINE = 'NEWLINE'
 TT_EOF = 'EOF'
-TT_SEMICOLON = ';'
+TT_SEMICOLON = 'SEMICOLON'
 
 KEYWORDS = [
     'let',
@@ -245,7 +245,12 @@ class Lexer:
             elif self.current_char == ',':
                 tokens.append(Token(TT_COMMA, pos_start=self.pos))
                 self.advance()
-
+            elif self.current_char == '{':
+                print("LEFT BRACE") # add more ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                self.advance()
+            elif self.current_char == '}':
+                print("RIGHT BRACE") # add more ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                self.advance()
             else:
                 pos_start = self.pos.copy()
                 char = self.current_char
@@ -366,7 +371,7 @@ class Lexer:
     def skip_comment(self):
         self.advance()
 
-        while self.current_char != ('\n' or '//'):
+        while self.current_char != '\n':
             self.advance()
 
         self.advance()
