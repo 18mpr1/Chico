@@ -29,5 +29,6 @@ print("Greetings universe!")
 
 for i = 0 to 5 then
 	print(join(map(["l", "sp"], oopify), ", "))
-
 end
+
+print("Done")
