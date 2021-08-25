@@ -4,28 +4,27 @@
 
 
 # NUM at the end of the file doesn't work for some reason
+# Why can't expressions be printed? Try video 3
+
+
 from sys import *
 tokensList = []
 
 def open_file(filename):
     data = open(filename,"r").read()
     #print(data)
-    data += "<EOF>"
+    data += "\n" # append newline to the end of the file
     return data
 
 def lex(fileContents):
-    # Variables
+    # Variables at default
     token = ""
     state = 0
     string = ""
     expression = ""
     number = ""
-    isExpression = 0 # boolean default 0
-
-
-
+    isExpression = False
     fileContents = list(fileContents)
-
     #print(fileContents)
     for char in fileContents:
         token += char
@@ -35,33 +34,28 @@ def lex(fileContents):
                 token = "" # allows for whitespace
             else:
                 token = " "
-        elif token == "\n" or token == "<EOF>":
-            if expression != "" and isExpression == 1:
-                #print(expression+" EXPRESSION")
-                tokensList.append("EXPR: "+expression)
+        elif token == "\n":
+            if expression != "" and isExpression is True:
+                tokensList.append("EXPR:"+expression)
                 expression = ""
-            elif expression != "" and isExpression == 0:
-                #print(expression+" NUMBER")
+            elif expression != "" and isExpression is False:
                 tokensList.append("NUM:"+expression)
                 expression = ""
             token = ""
         elif token == "print" or token == "write":
-            #print("**Found a print**")
             tokensList.append("PRINT")
             token = ""
         elif token == "0" or token == "1" or token == "3" or token == "4" or token == "5" or token == "6" or token == "7" or token == "8" or token == "9":
             expression += token
             token = ""
         elif token == "+":
-            isExpression = 1
+            isExpression = True
             expression += token
             token = ""
-
         elif token == "\"":
             if state == 0:
                 state = 1
             elif state == 1: # assume every letter is part of a string
-                #print("**Found a string**")
                 tokensList.append("STRING"+string+"\"")
                 string = ""
                 state = 0
@@ -69,15 +63,20 @@ def lex(fileContents):
         elif state == 1:
             string += token
             token = ""
-    print(tokensList)
+    print(tokensList) # for debugging
     return tokensList
 
 def parse(toks):
-
     i = 0
     while (i < len(toks)):
-        if toks[i]+" "+toks[i+1][0:6] == "PRINT STRING":
-            print(toks[i+1][6:])
+        if toks[i]+" "+toks[i+1][0:6] == "PRINT STRING" or toks[i]+" "+toks[i+1][0:3] == "PRINT NUM" or toks[i]+" "+toks[i+1][0:4] == "PRINT EXPR":
+            # indexes may be wrong; experiment with this
+            if toks[i+1][0:6] == "STRING":
+                print(toks[i+1][6:])
+            elif toks[i+1][0:3] == "NUM":
+                print(toks[i+1][4:])
+            elif toks[i+1][0:4] == "EXPR":
+                print(toks[i+1][5:])
             i += 2
 
 
