@@ -2,8 +2,8 @@
 # Matthew Rieckenberg
 # Summer 2021
 
-# 6:52
 
+# NUM at the end of the file doesn't work for some reason
 from sys import *
 tokensList = []
 
@@ -20,7 +20,7 @@ def lex(fileContents):
     string = ""
     expression = ""
     number = ""
-    isExpression = 0
+    isExpression = 0 # boolean default 0
 
 
 
@@ -36,11 +36,16 @@ def lex(fileContents):
             else:
                 token = " "
         elif token == "\n" or token == "<EOF>":
-            if expression != "":
-                print(expression)
+            if expression != "" and isExpression == 1:
+                #print(expression+" EXPRESSION")
+                tokensList.append("EXPR: "+expression)
+                expression = ""
+            elif expression != "" and isExpression == 0:
+                #print(expression+" NUMBER")
+                tokensList.append("NUM:"+expression)
                 expression = ""
             token = ""
-        elif token == "print" or token == "write" or token == "printf":
+        elif token == "print" or token == "write":
             #print("**Found a print**")
             tokensList.append("PRINT")
             token = ""
@@ -48,27 +53,27 @@ def lex(fileContents):
             expression += token
             token = ""
         elif token == "+":
+            isExpression = 1
             expression += token
             token = ""
-            isExpression = 1
 
         elif token == "\"":
             if state == 0:
                 state = 1
             elif state == 1: # assume every letter is part of a string
                 #print("**Found a string**")
-                tokensList.append("STRING:"+string+"\"")
+                tokensList.append("STRING"+string+"\"")
                 string = ""
                 state = 0
                 token = ""
         elif state == 1:
             string += token
             token = ""
-    #print(tokensList)
-    #print(expression)
+    print(tokensList)
     return tokensList
 
 def parse(toks):
+
     i = 0
     while (i < len(toks)):
         if toks[i]+" "+toks[i+1][0:6] == "PRINT STRING":
