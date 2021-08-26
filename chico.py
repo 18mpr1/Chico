@@ -5,6 +5,7 @@
 from sys import *
 tokensList = []
 numberStack = []
+symbols = {}
 
 def open_file(filename):
     data = open(filename,"r").read()
@@ -76,9 +77,9 @@ def lex(fileContents):
         elif state == 1:
             string += token
             token = ""
-    print(tokensList)
-    return ""
-    #return tokensList
+    #print(tokensList)
+    # return ""
+    return tokensList
 
 
 def evaluateExpression(thisExpression):
@@ -114,6 +115,10 @@ def evaluateExpression(thisExpression):
 #     print(toPrint)
 #     # print("toPrint")
 
+def assignVariable(variableName,variableValue):
+    symbols[variableName[7:]] = variableValue # omits the "let" part
+
+
 
 def parse(toks):
     i = 0
@@ -126,7 +131,10 @@ def parse(toks):
             elif toks[i+1][0:4] == "EXPR":
                 print(evaluateExpression(toks[i+1][5:]))
             i += 2
-
+        if toks[i][0:3] + " " + toks[i+1][0:6] + " "+toks[i+2][0:6] == "VAR EQUALS STRING":
+            assignVariable(toks[i],toks[i+2])
+            i += 3
+    print(symbols)
 
 def run():
     fileData = open_file(argv[1]) # set to main.ch
