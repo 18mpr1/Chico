@@ -19,8 +19,10 @@ def lex(fileContents):
     string = ""
     expression = ""
     number = ""
-    isExpression = 0 # boolean default 0
+    isExpression = False # boolean default 0
     fileContents = list(fileContents)
+    variableStarted = False
+    variable = ""
     for char in fileContents:
         token += char
         if token == " ":
@@ -29,15 +31,28 @@ def lex(fileContents):
             else:
                 token = " "
         elif token == "\n":
-            if expression != "" and isExpression == 1:
-
+            if expression != "" and isExpression is True:
                 tokensList.append("EXPR:"+expression)
                 expression = ""
-                isExpression = 0
+                isExpression = False
 
-            elif expression != "" and isExpression == 0:
+            elif expression != "" and isExpression is False:
                 tokensList.append("NUM:"+expression)
                 expression = ""
+            token = ""
+        elif token == "=" and state == 0:
+            if variable != "":
+                tokensList.append("VAR:"+variable)
+                variable = ""
+                variableStarted = False
+            tokensList.append("EQUALS")
+            token = ""
+        elif token == "let" and state == 0:
+            variableStarted = True
+            variable += token
+            token = ""
+        elif variableStarted is True:
+            variable += token
             token = ""
         elif token == "print" or token == "write":
             tokensList.append("PRINT")
@@ -61,8 +76,9 @@ def lex(fileContents):
         elif state == 1:
             string += token
             token = ""
-    #print(tokensList)
-    return tokensList
+    print(tokensList)
+    return ""
+    #return tokensList
 
 
 def evaluateExpression(thisExpression):
