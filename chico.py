@@ -10,7 +10,7 @@ symbols = {}
 def open_file(filename):
     data = open(filename,"r").read()
     #print(data)
-    data += "\n"
+    data += "<EOF>"
     return data
 
 def lex(fileContents):
@@ -31,12 +31,11 @@ def lex(fileContents):
                 token = "" # allows for whitespace
             else:
                 token = " "
-        elif token == "\n":
+        elif token == "\n" or token == "<EOF>":
             if expression != "" and isExpression is True:
                 tokensList.append("EXPR:"+expression)
                 expression = ""
                 isExpression = False
-
             elif expression != "" and isExpression is False:
                 tokensList.append("NUM:"+expression)
                 expression = ""
@@ -48,11 +47,17 @@ def lex(fileContents):
                 variableStarted = False
             tokensList.append("EQUALS")
             token = ""
-        elif token == "let" and state == 0:
+
+        elif token == "#" and state == 0:
             variableStarted = True
             variable += token
             token = ""
         elif variableStarted is True:
+            if token == "<" or token == ">":
+                if variable != "":
+                    tokensList.append("VAR:"+variable)
+                    variable = ""
+                    variableStarted = False
             variable += token
             token = ""
         elif token == "print" or token == "write":
@@ -77,7 +82,7 @@ def lex(fileContents):
         elif state == 1:
             string += token
             token = ""
-    #print(tokensList)
+    print(tokensList)
     # return ""
     return tokensList
 
@@ -104,41 +109,47 @@ def evaluateExpression(thisExpression):
     return eval(thisExpression) # Python's built-in method for this
 
 
-# def doPrint(toPrint): # optimized print function
-#     if toPrint[0:6] == "STRING":
-#         toPrint = toPrint[8:-1] # get rid of quotation marks
-#         #toPrint = toPrint[:-1]
-#     elif toPrint[0:3] == "NUM":
-#         toPrint = toPrint[4:]
-#     elif toPrint[0:4] == "EXPR":
-#         toPrint = toPrint(toPrint[5:])
-#     print(toPrint)
-#     # print("toPrint")
-
 def assignVariable(variableName,variableValue):
-    symbols[variableName[7:]] = variableValue # omits the "let" part
+    symbols[variableName[4:]] = variableValue # omits the "let" part
+    # print("ASSIGNING VAR")
 
+def getVariable(variableName):
+    variableName = variableName[4:]
+    if variableName in symbols:
+        print("TRUE")
+        return str(symbols[variableName])
+    else:
+        return "ERROR: Undefined variable"
 
 
 def parse(toks):
     i = 0
     while (i < len(toks)):
-        if toks[i]+" "+toks[i+1][0:6] == "PRINT STRING" or toks[i] + " " + toks[i+1][0:3] == "PRINT NUM" or toks[i] + " " + toks[i+1][0:4] == "PRINT EXPR":
+        if toks[i]+" "+toks[i+1][0:5] == "PRINT STRING" or toks[i] + " " + toks[i+1][0:2] == "PRINT NUM" or toks[i] + " " + toks[i+1][0:3] == "PRINT EXPR":
             if toks[i+1][0:6] == "STRING":
                 print(toks[i+1][8:-1])
             elif toks[i+1][0:3] == "NUM":
                 print(toks[i+1][4:])
             elif toks[i+1][0:4] == "EXPR":
                 print(evaluateExpression(toks[i+1][5:]))
+            elif toks[i+1][0:3] == "VAR":
+                print(getVariable(toks[i+1][5:]))
             i += 2
-        if toks[i][0:3] + " " + toks[i+1][0:6] + " "+toks[i+2][0:6] == "VAR EQUALS STRING":
-            assignVariable(toks[i],toks[i+2])
+        elif toks[i][0:3] + " " + toks[i+1][0:6] + " "+toks[i+2][0:6] == "VAR EQUALS STRING" or toks[i][0:3] + " " + toks[i+1][0:6] + " "+toks[i+2][0:3] == "VAR EQUALS NUM" or toks[i][0:3] + " " + toks[i+1][0:6] + " "+toks[i+2][0:4] == "VAR EQUALS EXPR":
+            if toks[i+2][0:6] == "STRING":
+                assignVariable(toks[i],toks[i+2])
+            elif toks[i+2][0:3] == "NUM":
+                assignVariable(toks[i],toks[i+2])
+            elif toks[i+2][0:4] == "EXPR":
+                assignVariable(toks[i],"NUM:"+str(evaluateExpression(toks[i+2][5:])))
             i += 3
+
     print(symbols)
 
 def run():
     fileData = open_file(argv[1]) # set to main.ch
     toks = lex(fileData)
+    # print(toks)
     parse(toks)
 
 
