@@ -66,25 +66,25 @@ def lex(fileContents):
 
 
 def evaluateExpression(thisExpression):
-    # return "Got it, " + thisExpression
-    thisExpression = "," + thisExpression
-    i = len(thisExpression)-1
-    num = ""
-    while i >= 0:
-        if thisExpression[i] == "+" or thisExpression[i] == "-" or thisExpression[i] == "*" or thisExpression[i] == "/" or thisExpression[i] == "%":
-            num = num[::-1]
-            numberStack.append(num)
-            numberStack.append(thisExpression[i])
-            num = ""
-        elif thisExpression[i] == ",": # end of expression
-            num = num[::-1]
-            numberStack.append(num)
-            num = ""
-        else:
-            # if it's a number
-            num += thisExpression[i]
-        i += -1
-    print(numberStack)
+    # thisExpression = "," + thisExpression
+    # i = len(thisExpression)-1
+    # num = ""
+    # while i >= 0:
+    #     if thisExpression[i] == "+" or thisExpression[i] == "-" or thisExpression[i] == "*" or thisExpression[i] == "/" or thisExpression[i] == "%":
+    #         num = num[::-1]
+    #         numberStack.append(num)
+    #         numberStack.append(thisExpression[i])
+    #         num = ""
+    #     elif thisExpression[i] == ",": # end of expression
+    #         num = num[::-1]
+    #         numberStack.append(num)
+    #         num = ""
+    #     else:
+    #         # if it's a number
+    #         num += thisExpression[i]
+    #     i += -1
+    # print(numberStack)
+    return eval(thisExpression) # Python's built-in method for this
 
 
 # def doPrint(toPrint): # optimized print function
@@ -108,7 +108,7 @@ def parse(toks):
             elif toks[i+1][0:3] == "NUM":
                 print(toks[i+1][4:])
             elif toks[i+1][0:4] == "EXPR":
-                evaluateExpression(toks[i+1][5:])
+                print(evaluateExpression(toks[i+1][5:]))
             i += 2
 
 
