@@ -4,6 +4,7 @@
 
 from sys import *
 tokensList = []
+numberStack = []
 
 def open_file(filename):
     data = open(filename,"r").read()
@@ -53,7 +54,6 @@ def lex(fileContents):
             if state == 0:
                 state = 1
             elif state == 1: # assume every letter is part of a string
-                #print("**Found a string**")
                 tokensList.append("STRING:"+string+"\"")
                 string = ""
                 state = 0
@@ -61,18 +61,42 @@ def lex(fileContents):
         elif state == 1:
             string += token
             token = ""
-    print(tokensList)
+    #print(tokensList)
     return tokensList
 
-def doPrint(toPrint): # optimized print function
-    if toPrint[0:6] == "STRING":
-        toPrint = toPrint[8:] # get rid of quotation marks
-        toPrint = toPrint[:-1]
-    elif toPrint[0:3] == "NUM":
-        toPrint = toPrint[4:]
-    elif toPrint[0:4] == "EXPR":
-        toPrint = toPrint[5:]
-    print(toPrint)
+
+def evaluateExpression(thisExpression):
+    # return "Got it, " + thisExpression
+    thisExpression = "," + thisExpression
+    i = len(thisExpression)-1
+    num = ""
+    while i >= 0:
+        if thisExpression[i] == "+" or thisExpression[i] == "-" or thisExpression[i] == "*" or thisExpression[i] == "/" or thisExpression[i] == "%":
+            num = num[::-1]
+            numberStack.append(num)
+            numberStack.append(thisExpression[i])
+            num = ""
+        elif thisExpression[i] == ",": # end of expression
+            num = num[::-1]
+            numberStack.append(num)
+            num = ""
+        else:
+            # if it's a number
+            num += thisExpression[i]
+        i += -1
+    print(numberStack)
+
+
+# def doPrint(toPrint): # optimized print function
+#     if toPrint[0:6] == "STRING":
+#         toPrint = toPrint[8:-1] # get rid of quotation marks
+#         #toPrint = toPrint[:-1]
+#     elif toPrint[0:3] == "NUM":
+#         toPrint = toPrint[4:]
+#     elif toPrint[0:4] == "EXPR":
+#         toPrint = toPrint(toPrint[5:])
+#     print(toPrint)
+#     # print("toPrint")
 
 
 def parse(toks):
@@ -80,11 +104,11 @@ def parse(toks):
     while (i < len(toks)):
         if toks[i]+" "+toks[i+1][0:6] == "PRINT STRING" or toks[i] + " " + toks[i+1][0:3] == "PRINT NUM" or toks[i] + " " + toks[i+1][0:4] == "PRINT EXPR":
             if toks[i+1][0:6] == "STRING":
-                doPrint(toks[i+1][8:-1])
+                print(toks[i+1][8:-1])
             elif toks[i+1][0:3] == "NUM":
-                doPrint(toks[i+1][4:])
+                print(toks[i+1][4:])
             elif toks[i+1][0:4] == "EXPR":
-                doPrint(toks[i+1][5:])
+                evaluateExpression(toks[i+1][5:])
             i += 2
 
 

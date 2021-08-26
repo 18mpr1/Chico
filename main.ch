@@ -1,6 +1,2 @@
-print 1
-print 2
-print 3
-print 4
-print 1*2-2/3(   )
-print "Matt"
+
+print 10+2*4
