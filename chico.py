@@ -1,4 +1,5 @@
 # Chico
+# an interpreted language using Python 3
 # Matthew Rieckenberg
 # Summer 2021
 
